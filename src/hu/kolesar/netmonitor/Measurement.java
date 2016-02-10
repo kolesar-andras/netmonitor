@@ -10,4 +10,8 @@ public class Measurement {
     public Integer signal;
     public Integer TA;
 
+    public String toString() {
+        return String.format("%d %d %d %d %d %d %d",
+            CC, NC, LAC, CID, CH, signal, TA);
+    }
 }

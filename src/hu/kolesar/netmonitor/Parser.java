@@ -1,5 +1,7 @@
 package hu.kolesar.netmonitor;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -15,12 +17,14 @@ public class Parser {
     private String phoneTime;
     private Integer netmonitorPage;
     private Record record;
+    private BufferedWriter out;
 
-    public Parser() {
+    public Parser(BufferedWriter out) {
+        this.out = out;
         record = new Record();
     }
 
-    public boolean parseLine(String line) {
+    public boolean parseLine(String line) throws IOException {
         this.line = line;
         lineCount++;
         return
@@ -68,9 +72,9 @@ public class Parser {
         return false;
     }
 
-    private boolean parseFinished() {
+    private boolean parseFinished() throws IOException {
         if (line.equals("Information: Batch processed, terminating.")) {
-            record.build();
+            out.write(record.build() + "\n");
             record = new Record();
             return true;
         }

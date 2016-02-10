@@ -11,7 +11,7 @@ public class Reader {
     public static void main(String[] args) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
-        Parser parser = new Parser();
+        Parser parser = new Parser(out);
         String line;
         while ((line = in.readLine()) != null) {
             parser.parseLine(line);
