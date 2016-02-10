@@ -4,6 +4,11 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Locale;
 
 public class Parser {
 
@@ -11,10 +16,13 @@ public class Parser {
     private static final Pattern patternPhoneTime = Pattern.compile("Phone time is (.+)");
     private static final Pattern patternNetmonitorPage = Pattern.compile("nokianetmonitor ([0-9]{2})");
 
+    private DateFormat formatSystemTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private DateFormat formatPhoneTime = new SimpleDateFormat("EEE dd MMM yyyy HH:mm:ss", Locale.ENGLISH);
+
     private String line;
     private int lineCount = 0;
-    private String systemTime;
-    private String phoneTime;
+    private Date systemTime;
+    private Date phoneTime;
     private Integer netmonitorPage;
     private Record record;
     private BufferedWriter out;
@@ -24,7 +32,7 @@ public class Parser {
         record = new Record();
     }
 
-    public boolean parseLine(String line) throws IOException {
+    public boolean parseLine(String line) throws IOException, ParseException {
         this.line = line;
         lineCount++;
         return
@@ -47,17 +55,19 @@ public class Parser {
             line.equals("No response in specified timeout. Probably phone not connected.");
     }
 
-    private boolean parseSystemTime() {
-        if (patternSystemTime.matcher(line).matches()) {
-            systemTime = line;
+    private boolean parseSystemTime() throws ParseException {
+        Matcher matcher = patternSystemTime.matcher(line);
+        if (matcher.matches()) {
+            systemTime = formatSystemTime.parse(matcher.group(1));
             return true;
         }
         return false;
     }
 
-    private boolean parsePhoneTime() {
-        if (patternPhoneTime.matcher(line).matches()) {
-            phoneTime = line;
+    private boolean parsePhoneTime() throws ParseException {
+        Matcher matcher = patternPhoneTime.matcher(line.trim());
+        if (matcher.matches()) {
+            phoneTime = formatPhoneTime.parse(matcher.group(1));
             return true;
         }
         return false;
