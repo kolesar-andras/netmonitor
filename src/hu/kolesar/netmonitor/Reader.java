@@ -16,6 +16,8 @@ import org.xml.sax.SAXException;
 
 public class Reader {
 
+    private static GpxData gpxData;
+
     public static void main(String[] args) throws IOException, ParseException, SAXException {
         if (args.length < 1) {
             System.err.println("Please specify trackfile name.\n");
@@ -26,18 +28,17 @@ public class Reader {
     }
 
     private static void loadTrack(String filename) throws IOException, SAXException {
-        GpxData data = null;
         try (InputStream iStream = new FileInputStream(new File(filename))) {
             GpxReader reader = new GpxReader(iStream);
             reader.parse(false);
-            data = reader.getGpxData();
+            gpxData = reader.getGpxData();
         }
     }
 
     private static void loadStdin() throws IOException, ParseException {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
-        Parser parser = new Parser(out);
+        Parser parser = new Parser(out, gpxData);
         String line;
         while ((line = in.readLine()) != null) {
             parser.parseLine(line);

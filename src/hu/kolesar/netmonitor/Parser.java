@@ -10,6 +10,9 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
 
+import org.openstreetmap.josm.data.gpx.GpxData;
+import org.openstreetmap.josm.data.coor.LatLon;
+
 public class Parser {
 
     private static final Pattern patternSystemTime = Pattern.compile( "\\[([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\\]");
@@ -23,13 +26,16 @@ public class Parser {
     private int lineCount = 0;
     private Date systemTime;
     private Date phoneTime;
+    private long timeOffset;
     private Integer netmonitorPage;
     private Record record;
     private BufferedWriter out;
+    private Georeferencer georeferencer;
 
-    public Parser(BufferedWriter out) {
+    public Parser(BufferedWriter out, GpxData gpxData) {
         this.out = out;
         record = new Record();
+        georeferencer = new Georeferencer(gpxData);
     }
 
     public boolean parseLine(String line) throws IOException, ParseException {
@@ -68,6 +74,7 @@ public class Parser {
         Matcher matcher = patternPhoneTime.matcher(line.trim());
         if (matcher.matches()) {
             phoneTime = formatPhoneTime.parse(matcher.group(1));
+            setTimeOffset();
             return true;
         }
         return false;
@@ -84,7 +91,10 @@ public class Parser {
 
     private boolean parseFinished() throws IOException {
         if (line.equals("Information: Batch processed, terminating.")) {
-            out.write(record.build() + "\n");
+            Measurement measurement = record.build();
+            LatLon coord = georeferencer.getLatLon(measurement, getRealTime(systemTime));
+            if (coord != null)
+                out.write(coord.lat() + ", " + coord.lon() + ": " + measurement + "\n");
             record = new Record();
             return true;
         }
@@ -94,5 +104,14 @@ public class Parser {
     private boolean parseNetmonitorRow() {
         record.addRow(netmonitorPage, line);
         return true;
+    }
+
+    private void setTimeOffset() {
+        if (systemTime == null) return;
+        timeOffset = phoneTime.getTime() - systemTime.getTime();
+    }
+
+    private Date getRealTime(Date systemTime) {
+        return new Date(systemTime.getTime() + timeOffset);
     }
 }
