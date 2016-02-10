@@ -13,7 +13,11 @@
   </target>
 
   <target name="compile" depends="init" description="compile the source">
-    <javac srcdir="${src}" destdir="${build}" includeantruntime="false"/>
+    <javac srcdir="${src}" destdir="${build}" includeantruntime="false">
+      <classpath>
+        <pathelement path="${dist}/lib/josm.jar"/>
+      </classpath>
+    </javac>
   </target>
 
   <target name="dist" depends="compile" description="generate the distribution">
