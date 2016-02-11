@@ -28,7 +28,7 @@ public class Georeferencer {
     public LatLon getLatLon(Date date) {
         try {
             Pair pair = findPair(date);
-            return pair.before.getCoor();
+            return interpolate(date, pair);
         } catch (OutOfTrackException e) {
             return null;
         }
