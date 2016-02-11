@@ -25,7 +25,7 @@ public class Georeferencer {
         this.gpxData = gpxData;
     }
 
-    public LatLon getLatLon(Measurement measurement, Date date) {
+    public LatLon getLatLon(Date date) {
         try {
             Pair pair = findPair(date);
             return pair.before.getCoor();

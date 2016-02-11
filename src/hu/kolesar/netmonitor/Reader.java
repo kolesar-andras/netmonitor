@@ -38,13 +38,16 @@ public class Reader {
     private static void loadStdin() throws IOException, ParseException {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
-        Parser parser = new Parser(out, gpxData);
+        Writer writer = new OsmWriter(out);
+        writer.start();
+        Parser parser = new Parser(gpxData, writer);
         String line;
         while ((line = in.readLine()) != null) {
             parser.parseLine(line);
         }
         in.close();
+        writer.end();
         out.flush();
-        System.out.printf("lines: %d\n", parser.getLineCount());
+        System.err.printf("lines: %d\n", parser.getLineCount());
     }
 }

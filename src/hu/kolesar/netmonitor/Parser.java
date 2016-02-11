@@ -29,11 +29,11 @@ public class Parser {
     private long timeOffset;
     private Integer netmonitorPage;
     private Record record;
-    private BufferedWriter out;
+    private Writer writer;
     private Georeferencer georeferencer;
 
-    public Parser(BufferedWriter out, GpxData gpxData) {
-        this.out = out;
+    public Parser(GpxData gpxData, Writer writer) {
+        this.writer = writer;
         record = new Record();
         georeferencer = new Georeferencer(gpxData);
     }
@@ -92,9 +92,9 @@ public class Parser {
     private boolean parseFinished() throws IOException {
         if (line.equals("Information: Batch processed, terminating.")) {
             Measurement measurement = record.build();
-            LatLon coord = georeferencer.getLatLon(measurement, getRealTime(systemTime));
-            if (coord != null)
-                out.write(coord.lat() + ", " + coord.lon() + ": " + measurement + "\n");
+            measurement.date = getRealTime(systemTime);
+            measurement.latlon = georeferencer.getLatLon(measurement.date);
+            writer.write(measurement);
             record = new Record();
             return true;
         }
