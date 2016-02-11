@@ -26,7 +26,7 @@ public class Georeferencer {
     }
 
     public Pair findPair(Date date) throws OutOfTrackException {
-        double dateAsDouble = (double) (date.getTime()/1000);
+        double dateAsDouble = dateAsDouble(date);
         WayPoint lastWayPoint = null;
         for (GpxTrack trk: gpxData.tracks) {
             for (GpxTrackSegment seg : trk.getSegments()) {
@@ -44,6 +44,15 @@ public class Georeferencer {
             }
         }
         throw new OutOfTrackException();
+    }
+
+    public static LatLon interpolate(Date date, Pair pair) {
+        double proportion = (dateAsDouble(date) - pair.before.time) / (pair.after.time - pair.before.time);
+        return pair.before.getCoor().interpolate(pair.after.getCoor(), proportion);
+    }
+
+    public static double dateAsDouble(Date date) {
+        return (double) (date.getTime()/1000);
     }
 
     class Pair {
