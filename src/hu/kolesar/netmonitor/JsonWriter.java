@@ -51,7 +51,8 @@ public class JsonWriter extends Writer {
     }
 
     public void writeRaw(String name, String raw) throws IOException {
-        if (name == null) return;
+        // OpenCellID stops at first null value
+        if (name == null || raw == null || raw.equals("null")) return;
         if (firstTag) {
             firstTag = false;
         } else {
