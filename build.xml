@@ -15,14 +15,14 @@
   <target name="compile" depends="init" description="compile the source">
     <javac srcdir="${src}" destdir="${build}" includeantruntime="false">
       <classpath>
-        <pathelement path="${dist}/lib/josm.jar"/>
+        <pathelement path="${dist}/josm.jar"/>
       </classpath>
     </javac>
   </target>
 
   <target name="dist" depends="compile" description="generate the distribution">
-    <mkdir dir="${dist}/lib"/>
-    <jar jarfile="${dist}/lib/Netmonitor.jar" basedir="${build}">
+    <mkdir dir="${dist}"/>
+    <jar jarfile="${dist}/netmonitor.jar" basedir="${build}">
       <manifest>
         <attribute name="Main-Class" value="hu.kolesar.netmonitor.Reader"/>
       </manifest>
