@@ -96,7 +96,7 @@ public class Parser {
             Measurement measurement = record.build();
             measurement.date = getRealTime(systemTime);
             measurement.latlon = georeferencer.getLatLon(measurement.date);
-            if (filter.pass(measurement)) {
+            if (measurement.signal != null && filter.pass(measurement)) {
                 writer.write(measurement);
             }
             record = new Record();
