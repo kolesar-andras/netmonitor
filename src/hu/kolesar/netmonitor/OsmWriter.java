@@ -8,13 +8,10 @@ import java.util.Locale;
 
 public class OsmWriter extends Writer {
 
-    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-    BufferedWriter out;
     int nodeId = 0;
 
     public OsmWriter(BufferedWriter out) {
-        this.out = out;
+        super(out);
     }
 
     public void start() throws IOException {

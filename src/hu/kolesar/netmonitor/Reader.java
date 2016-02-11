@@ -38,7 +38,7 @@ public class Reader {
     private static void loadStdin() throws IOException, ParseException {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
-        Writer writer = new OsmWriter(out);
+        Writer writer = new JsonWriter(out);
         writer.start();
         Parser parser = new Parser(gpxData, writer);
         String line;
