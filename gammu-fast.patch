@@ -1,0 +1,66 @@
+diff -ur gammu-1.35.0-orig/gammu/gammu.c gammu-1.35.0/gammu/gammu.c
+--- gammu-1.35.0-orig/gammu/gammu.c	2015-03-02 15:21:56.000000000 +0100
++++ gammu-1.35.0/gammu/gammu.c	2015-03-26 11:44:21.470546941 +0100
+@@ -462,8 +462,9 @@
+ 		*/
+ 		if (argsc > 0) {
+ 			/* we have some usable command and parameters, send them into standard processing */
+-			printf ("----------------------------------------------------------------------------\n");
+-			printf(_("Executing batch \"%s\" - command %i: %s\n"), name, ++c, ln);
++			// printf ("----------------------------------------------------------------------------\n");
++			// printf(_("Executing batch \"%s\" - command %i: %s\n"), name, ++c, ln);
++			printf("%s\n", ln);
+ 			/**
+ 			 * @todo Handle return value from ProcessParameters.
+ 			 */
+diff -ur gammu-1.35.0-orig/libgammu/phone/nokia/dct3/n6110.c gammu-1.35.0/libgammu/phone/nokia/dct3/n6110.c
+--- gammu-1.35.0-orig/libgammu/phone/nokia/dct3/n6110.c	2015-03-02 15:21:56.000000000 +0100
++++ gammu-1.35.0/libgammu/phone/nokia/dct3/n6110.c	2015-03-26 10:47:59.150257546 +0100
+@@ -74,7 +74,7 @@
+                 feat_req[6] = 0x21;
+         }
+         smprintf(s, "Getting profile feature\n");
+-        return GSM_WaitFor (s, feat_req, 7, 0x05, 4, ID_GetLanguage);
++        return GSM_WaitFor (s, feat_req, 7, 0x05, 1, ID_GetLanguage);
+ }
+ 
+ struct N6110_Lang_Char {
+diff -ur gammu-1.35.0-orig/libgammu/protocol/nokia/fbus2.c gammu-1.35.0/libgammu/protocol/nokia/fbus2.c
+--- gammu-1.35.0-orig/libgammu/protocol/nokia/fbus2.c	2015-03-02 15:21:56.000000000 +0100
++++ gammu-1.35.0/libgammu/protocol/nokia/fbus2.c	2015-03-26 11:39:10.892372134 +0100
+@@ -456,7 +456,7 @@
+ 		error = Device->DeviceSetDtrRts(s, !(s->NoPowerCable), FALSE);
+ 		if (error != ERR_NONE) return error;
+ 
+-		error = FBUS2_InitSequence(s, 32, 0, TRUE);
++		if (FALSE) error = FBUS2_InitSequence(s, 32, 0, TRUE);
+ 		if (error != ERR_NONE) return error;
+ 
+ 		break;
+@@ -478,14 +478,14 @@
+ 	}
+ 
+ 	/* A bit more of synchronisation could be needed here */
+-	if (s->ConnectionType != GCT_FBUS2BLUE && s->ConnectionType != GCT_BLUEFBUS2) {
++	if (FALSE && s->ConnectionType != GCT_FBUS2BLUE && s->ConnectionType != GCT_BLUEFBUS2) {
+ 		error = FBUS2_InitSequence(s, 250, 100, FALSE);
+ 		if (error != ERR_NONE) return error;
+ 	}
+ 
+ 	/* Read any possible junk on the line */
+ 	while (s->Device.Functions->ReadDevice(s, buff, sizeof(buff)) > 0) {
+-		usleep(1000);
++		usleep(100);
+ 	}
+ 
+ 	return ERR_NONE;
+@@ -497,7 +497,7 @@
+ 	s->Protocol.Data.FBUS2.Msg.Buffer = NULL;
+ 	free(s->Protocol.Data.FBUS2.MultiMsg.Buffer);
+ 	s->Protocol.Data.FBUS2.MultiMsg.Buffer = NULL;
+-	sleep(2);
++	// sleep(2);
+ 	return ERR_NONE;
+ }
+ 
+
