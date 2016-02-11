@@ -36,9 +36,10 @@ public class JsonWriter extends Writer {
         writeTag("lac", m.LAC);
         writeTag("cellid", m.CID);
         writeTag("ch", m.CH);
+        writeTag("bsic", m.BSIC);
         writeTag("rssi", m.signal);
         writeTag("measured", m.date);
-        writeTag("net", "gsm");
+        writeTag("act", "GSM");
         out.write("\n    }");
     }
 

@@ -12,13 +12,14 @@ public class Measurement {
     public Integer CH;
     public Integer signal;
     public Integer TA;
+    public Integer BSIC;
 
     public Date date;
     public LatLon latlon;
 
     public String toString() {
-        return String.format("%d %d %d %d %d %d %d",
-            CC, NC, LAC, CID, CH, signal, TA);
+        return String.format("%d %d %d %d %d %d %d %d",
+            CC, NC, LAC, CID, CH, signal, TA, BSIC);
     }
 
     public double distance(Measurement other) {

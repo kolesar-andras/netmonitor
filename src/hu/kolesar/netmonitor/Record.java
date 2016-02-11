@@ -75,6 +75,12 @@ public class Record {
         return Integer.valueOf(taString);
     }
 
+    private Integer getBSIC() {
+        String bsicString = getPageLine(2, 1).substring(10, 12).trim();
+        if (bsicString.equals("xx")) return null;
+        return Integer.valueOf(bsicString);
+    }
+
     public Measurement build() {
         Measurement m = new Measurement();
         m.CC = getCC();
@@ -84,6 +90,7 @@ public class Record {
         m.CH = getCH();
         m.signal = getSignal();
         m.TA = getTA();
+        m.BSIC = getBSIC();
         return m;
     }
 }
