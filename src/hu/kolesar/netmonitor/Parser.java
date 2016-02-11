@@ -30,11 +30,13 @@ public class Parser {
     private Integer netmonitorPage;
     private Record record;
     private Writer writer;
+    private Filter filter;
     private Georeferencer georeferencer;
 
     public Parser(GpxData gpxData, Writer writer) {
         this.writer = writer;
         record = new Record();
+        filter = new Filter();
         georeferencer = new Georeferencer(gpxData);
     }
 
@@ -94,7 +96,9 @@ public class Parser {
             Measurement measurement = record.build();
             measurement.date = getRealTime(systemTime);
             measurement.latlon = georeferencer.getLatLon(measurement.date);
-            writer.write(measurement);
+            if (filter.pass(measurement)) {
+                writer.write(measurement);
+            }
             record = new Record();
             return true;
         }

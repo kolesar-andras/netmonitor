@@ -20,4 +20,17 @@ public class Measurement {
         return String.format("%d %d %d %d %d %d %d",
             CC, NC, LAC, CID, CH, signal, TA);
     }
+
+    public double distance(Measurement other) {
+        return latlon.greatCircleDistance(other.latlon);
+    }
+
+    public boolean differentCell(Measurement other) {
+        return !(
+            CC != null && CC.equals(other.CC) &&
+            NC != null && NC.equals(other.NC) &&
+            LAC != null && LAC.equals(other.LAC) &&
+            CID != null && CID.equals(other.CID)
+        );
+    }
 }

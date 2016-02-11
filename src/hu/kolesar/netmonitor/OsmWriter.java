@@ -32,6 +32,7 @@ public class OsmWriter extends Writer {
         writeTag("ch", m.CH);
         writeTag("rssi", m.signal);
         writeTag("measured", m.date);
+        writeTag("net", "gsm");
         out.write("</node>\n");
     }
 
