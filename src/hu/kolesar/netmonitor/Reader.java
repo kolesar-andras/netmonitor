@@ -43,6 +43,8 @@ public class Reader {
         while ((line = in.readLine()) != null) {
             parser.parseLine(line);
         }
+        in.close();
+        out.flush();
         System.out.printf("lines: %d\n", parser.getLineCount());
     }
 }
