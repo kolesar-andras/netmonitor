@@ -37,10 +37,6 @@ public class Record {
         return matcher.group(1);
     }
 
-    public Integer getInteger(Pattern pattern, String line) {
-        return Integer.valueOf(firstMatch(pattern, line));
-    }
-
     private Integer getCC() {
         return getInteger(patternCC, getPageLine(11, 1));
     }
@@ -62,23 +58,29 @@ public class Record {
     }
 
     private Integer getSignal() {
-        String signalString = getPageLine(1, 1).substring(5, 8).trim();
-        if (signalString.equals("xxx")) return null;
-        Integer signal = Integer.valueOf(signalString);
-        if (signal >= 100) signal = -signal;
+        Integer signal = toInteger(getPageLine(1, 1).substring(5, 8));
+        if (signal != null && signal >= 100) signal = -signal;
         return signal;
     }
 
     private Integer getTA() {
-        String taString = getPageLine(1, 2).substring(3, 5).trim();
-        if (taString.equals("xx")) return null;
-        return Integer.valueOf(taString);
+        return toInteger(getPageLine(1, 2).substring(3, 5));
     }
 
     private Integer getBSIC() {
-        String bsicString = getPageLine(2, 1).substring(10, 12).trim();
-        if (bsicString.equals("xx")) return null;
-        return Integer.valueOf(bsicString);
+        return toInteger(getPageLine(2, 1).substring(10, 12));
+    }
+
+    public Integer getInteger(Pattern pattern, String line) {
+        String match = firstMatch(pattern, line);
+        return toInteger(match);
+    }
+
+    private Integer toInteger(String string) {
+        if (string == null) return null;
+        string = string.trim();
+        if (string.substring(0, 1).equals("x")) return null;
+        return Integer.valueOf(string);
     }
 
     public Measurement build() {
