@@ -17,14 +17,28 @@ import org.xml.sax.SAXException;
 public class Reader {
 
     private static GpxData gpxData;
+    private static Writer writer;
 
-    public static void main(String[] args) throws IOException, ParseException, SAXException {
-        if (args.length < 1) {
-            System.err.println("Please specify trackfile name.\n");
-            return;
+    public static void main(String[] args) throws IOException, ParseException, SAXException, org.apache.commons.cli.ParseException {
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
+        Cli cli = new Cli(args);
+
+        if (cli.cmd.hasOption("format") && cli.cmd.getOptionValue("format").equals("osm")) {
+            writer = new OsmWriter(out);
+        } else {
+            writer = new JsonWriter(out);
         }
-        loadTrack(args[0]);
-        loadStdin();
+        writer.start();
+
+        loadTrack(cli.cmd.getArgs()[0]);
+        loadInput(in);
+
+        in.close();
+        writer.end();
+        out.flush();
+
     }
 
     private static void loadTrack(String filename) throws IOException, SAXException {
@@ -35,19 +49,12 @@ public class Reader {
         }
     }
 
-    private static void loadStdin() throws IOException, ParseException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
-        Writer writer = new JsonWriter(out);
-        writer.start();
+    private static void loadInput(BufferedReader in) throws IOException, ParseException {
         Parser parser = new Parser(gpxData, writer);
         String line;
         while ((line = in.readLine()) != null) {
             parser.parseLine(line);
         }
-        in.close();
-        writer.end();
-        out.flush();
         System.err.printf("lines: %d\n", parser.getLineCount());
     }
 }

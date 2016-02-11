@@ -15,7 +15,9 @@
   <target name="compile" depends="init" description="compile the source">
     <javac srcdir="${src}" destdir="${build}" includeantruntime="false">
       <classpath>
-        <pathelement path="${dist}/josm.jar"/>
+        <fileset dir="${dist}/lib">
+          <include name="**/*.jar"/>
+        </fileset>
       </classpath>
     </javac>
   </target>
