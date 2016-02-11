@@ -16,4 +16,9 @@ Files named `crontab` in home/pi and root folders need to be installed using com
 
 Tested with Raspberry Pi 2 and three Nokia 6150 phones.
 
-Georeferencer is written in Java. It uses GPX parser classes from JOSM. Place josm.jar into `dist/lib` directory before compiling with `ant` command.
+Georeferencer is written in Java. It uses GPX parser classes from JOSM. Copy or symlink josm.jar into `dist/lib` directory before compiling with `ant` command:
+
+    mkdir -p dist/lib
+    ln -s /usr/share/josm/josm.jar dist/lib
+
+Another way to adjust classpath in `build.xml`.
