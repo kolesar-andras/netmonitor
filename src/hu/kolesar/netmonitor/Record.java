@@ -41,27 +41,27 @@ public class Record {
         return Integer.valueOf(firstMatch(pattern, line));
     }
 
-    private Integer getCC () {
+    private Integer getCC() {
         return getInteger(patternCC, getPageLine(11, 1));
     }
 
-    private Integer getNC () {
+    private Integer getNC() {
         return getInteger(patternNC, getPageLine(11, 1));
     }
 
-    private Integer getLAC () {
+    private Integer getLAC() {
         return getInteger(patternLAC, getPageLine(11, 2));
     }
 
-    private Integer getCID () {
+    private Integer getCID() {
         return getInteger(patternCID, getPageLine(11, 4));
     }
 
-    private Integer getCH () {
+    private Integer getCH() {
         return getInteger(patternCH, getPageLine(11, 3));
     }
 
-    private Integer getSignal () {
+    private Integer getSignal() {
         String signalString = getPageLine(1, 1).substring(5, 8).trim();
         if (signalString.equals("xxx")) return null;
         Integer signal = Integer.valueOf(signalString);
@@ -69,7 +69,7 @@ public class Record {
         return signal;
     }
 
-    private Integer getTA () {
+    private Integer getTA() {
         String taString = getPageLine(1, 2).substring(3, 5).trim();
         if (taString.equals("xx")) return null;
         return Integer.valueOf(taString);

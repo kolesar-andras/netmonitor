@@ -15,3 +15,5 @@ There are files for root user for easy shutdown by connecting GPIO pin 3 to GND.
 Files named `crontab` in home/pi and root folders need to be installed using command `crontab crontab` issued by each users.
 
 Tested with Raspberry Pi 2 and three Nokia 6150 phones.
+
+Georeferencer is written in Java. It uses GPX parser classes from JOSM. Place josm.jar into `dist/lib` directory before compiling with `ant` command.
