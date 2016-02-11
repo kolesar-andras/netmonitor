@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class JsonWriter extends Writer {
 
@@ -12,11 +13,12 @@ public class JsonWriter extends Writer {
 
     public JsonWriter(BufferedWriter out) {
         super(out);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
     public void start() throws IOException {
         out.write("{\n");
-        out.write("  measurements: [\n");
+        out.write("  \"measurements\": [\n");
         firstMeasurement = true;
     }
 
@@ -37,9 +39,8 @@ public class JsonWriter extends Writer {
         writeTag("cellid", m.CID);
         writeTag("ch", m.CH);
         writeTag("bsic", m.BSIC);
-        writeTag("rssi", m.signal);
-        writeTag("measured", m.date);
-        writeTag("act", "GSM");
+        writeTag("signal", m.signal);
+        writeTag("measured_at", m.date);
         out.write("\n    }");
     }
 
@@ -56,7 +57,7 @@ public class JsonWriter extends Writer {
         } else {
             out.write(",\n");
         }
-        out.write(String.format("      %s: %s", name, raw));
+        out.write(String.format("      \"%s\": %s", name, raw));
     }
 
     public void writeTag(String name, String value) throws IOException {
