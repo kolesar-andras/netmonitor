@@ -76,9 +76,11 @@ public class Parser {
 
     private boolean parsePhoneTime() throws ParseException {
         Matcher matcher = patternPhoneTime.matcher(line.trim());
-        if (matcher.matches() && phoneTime == null) {
-            phoneTime = formatPhoneTime.parse(matcher.group(1));
-            setTimeOffset();
+        if (matcher.matches()) {
+            if (phoneTime == null) {
+                phoneTime = formatPhoneTime.parse(matcher.group(1));
+                setTimeOffset();
+            }
             return true;
         }
         return false;
