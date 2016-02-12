@@ -55,6 +55,11 @@ public class Reader {
         while ((line = in.readLine()) != null) {
             parser.parseLine(line);
         }
-        System.err.printf("lines: %d\n", parser.getLineCount());
+        if (verbose())
+            System.err.printf("input line count: %d\n", parser.getLineCount());
+    }
+
+    public static boolean verbose() {
+        return Cli.instance.cmd.hasOption("verbose");
     }
 }

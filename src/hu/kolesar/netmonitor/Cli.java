@@ -10,11 +10,14 @@ import org.apache.commons.cli.ParseException;
 
 public class Cli {
 
+    public static Cli instance;
     public CommandLine cmd;
 
     public Cli(String[] args) throws ParseException {
+        instance = this;
         Options options = new Options();
         options.addOption("h", "help", false, "show help");
+        options.addOption("v", "verbose", false, "verbose output");
 
         options.addOption(Option.builder("f")
             .longOpt("format")
