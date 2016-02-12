@@ -8,7 +8,7 @@ public class Filter {
 
     public boolean pass(Measurement measurement) {
         boolean pass = false;
-        if (measurement.latlon == null) {
+        if (measurement.location == null) {
             // ignore
         } else if (lastMeasurement == null) {
             pass = true;

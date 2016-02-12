@@ -25,17 +25,17 @@ public class Georeferencer {
         this.gpxData = gpxData;
     }
 
-    public LatLon getLatLon(Date date) {
+    public Location getLocation(Date date) {
         try {
             Pair pair = findPair(date);
-            return interpolate(date, pair);
+            return pair.getLocation(date);
         } catch (OutOfTrackException e) {
             return null;
         }
     }
 
     public Pair findPair(Date date) throws OutOfTrackException {
-        double dateAsDouble = dateAsDouble(date);
+        double dateAsDouble = Pair.dateAsDouble(date);
         if (lastPair != null && lastPair.isWithin(dateAsDouble)) return lastPair;
         WayPoint pnt;
         while (null != (pnt = nextWayPoint())) {
@@ -76,33 +76,6 @@ public class Georeferencer {
             itWayPoint = gpxTrackSegment.getWayPoints().iterator();
         }
         return itWayPoint.next();
-    }
-
-    public static LatLon interpolate(Date date, Pair pair) {
-        double proportion = (dateAsDouble(date) - pair.before.time) / (pair.after.time - pair.before.time);
-        return pair.before.getCoor().interpolate(pair.after.getCoor(), proportion);
-    }
-
-    public static double dateAsDouble(Date date) {
-        return (double) (date.getTime()/1000);
-    }
-
-    class Pair {
-        public WayPoint before;
-        public WayPoint after;
-
-        public Pair(WayPoint before, WayPoint after) {
-            this.before = before;
-            this.after = after;
-        }
-
-        public String toString() {
-            return before.toString() + '-' + after.toString();
-        }
-
-        public boolean isWithin(double dateAsDouble) {
-            return dateAsDouble >= before.time && dateAsDouble <= after.time;
-        }
     }
 
     class OutOfTrackException extends Exception {}

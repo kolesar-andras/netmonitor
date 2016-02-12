@@ -95,7 +95,7 @@ public class Parser {
         if (line.equals("Information: Batch processed, terminating.")) {
             Measurement measurement = record.build();
             measurement.date = getRealTime(systemTime);
-            measurement.latlon = georeferencer.getLatLon(measurement.date);
+            measurement.location = georeferencer.getLocation(measurement.date);
             if (measurement.signal != null && filter.pass(measurement)) {
                 writer.write(measurement);
             }

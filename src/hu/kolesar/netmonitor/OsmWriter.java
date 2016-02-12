@@ -20,8 +20,9 @@ public class OsmWriter extends Writer {
     }
 
     public void write(Measurement m) throws IOException {
-        if (m.latlon == null) return;
-        out.write(String.format(Locale.US, "<node id='90000%08d' visible='true' version='1' lat='%1.7f' lon='%1.7f'>\n", ++nodeId, m.latlon.lat(), m.latlon.lon()));
+        if (m.location == null) return;
+        out.write(String.format(Locale.US, "<node id='90000%08d' visible='true' version='1' lat='%1.7f' lon='%1.7f'>\n",
+            ++nodeId, m.location.latlon.lat(), m.location.latlon.lon()));
         writeTag("mcc", m.CC);
         writeTag("mnc", m.NC);
         writeTag("lac", m.LAC);
@@ -31,6 +32,8 @@ public class OsmWriter extends Writer {
         writeTag("rssi", m.signal);
         writeTag("measured", m.date);
         writeTag("net", "gsm");
+        writeTag("speed", m.location.speed, 0);
+        writeTag("direction", m.location.direction, 0);
         out.write("</node>\n");
     }
 
@@ -52,4 +55,7 @@ public class OsmWriter extends Writer {
         writeTag(name, String.format("%s", dateFormat.format(value)));
     }
 
+    public void writeTag(String name, double value, int digits) throws IOException {
+        writeTag(name, String.format(Locale.US, String.format("%%1.%df", digits), value));
+    }
 }

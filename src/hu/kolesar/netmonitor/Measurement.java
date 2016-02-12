@@ -15,7 +15,7 @@ public class Measurement {
     public Integer BSIC;
 
     public Date date;
-    public LatLon latlon;
+    public Location location;
 
     public String toString() {
         return String.format("%d %d %d %d %d %d %d %d",
@@ -23,7 +23,7 @@ public class Measurement {
     }
 
     public double distance(Measurement other) {
-        return latlon.greatCircleDistance(other.latlon);
+        return location.latlon.greatCircleDistance(other.location.latlon);
     }
 
     public boolean differentCell(Measurement other) {

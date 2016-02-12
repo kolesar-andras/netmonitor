@@ -23,7 +23,7 @@ public class JsonWriter extends Writer {
     }
 
     public void write(Measurement m) throws IOException {
-        if (m.latlon == null) return;
+        if (m.location == null) return;
         firstTag = true;
         if (firstMeasurement) {
             firstMeasurement = false;
@@ -31,8 +31,8 @@ public class JsonWriter extends Writer {
             out.write(",\n");
         }
         out.write("    {\n");
-        writeTag("lat", m.latlon.lat(), 7);
-        writeTag("lon", m.latlon.lon(), 7);
+        writeTag("lat", m.location.latlon.lat(), 7);
+        writeTag("lon", m.location.latlon.lon(), 7);
         writeTag("mcc", m.CC);
         writeTag("mnc", m.NC);
         writeTag("lac", m.LAC);
@@ -41,6 +41,8 @@ public class JsonWriter extends Writer {
         writeTag("bsic", m.BSIC);
         writeTag("signal", m.signal);
         writeTag("measured_at", m.date);
+        writeTag("speed", m.location.speed, 1);
+        writeTag("direction", m.location.direction, 1);
         out.write("\n    }");
     }
 
@@ -68,6 +70,12 @@ public class JsonWriter extends Writer {
     public void writeTag(String name, double value, int digits) throws IOException {
         writeRaw(name, String.format(Locale.US, String.format("%%1.%df", digits), value));
     }
+
+    public void writeTag(String name, Float value, int digits) throws IOException {
+        if (value == null) return;
+        writeTag(name, (double) value, digits);
+    }
+
 
     public void writeTag(String name, Integer value) throws IOException {
         writeRaw(name, String.format("%d", value));
