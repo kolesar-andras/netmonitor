@@ -72,7 +72,9 @@ public class Record {
     }
 
     private Integer getSignal() {
-        Integer signal = toInteger(getPageLine(1, 1).substring(5, 8));
+        String cut = getPageLine(1, 1).substring(5, 8);
+        if (cut.substring(0, 2).equals("- ")) return null; // Nokia bug
+        Integer signal = toInteger(cut);
         if (signal != null && signal >= 100) signal = -signal;
         return signal;
     }
