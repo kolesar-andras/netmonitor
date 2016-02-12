@@ -14,7 +14,7 @@ public class Filter {
             pass = true;
         } else {
             if (measurement.distance(lastMeasurement) > minDistance) pass = true;
-            if (measurement.differentCell(lastMeasurement)) pass = true;
+            // if (measurement.cell.equals(lastMeasurement.cell)) pass = true;
         }
         if (pass) lastMeasurement = measurement;
         return pass;

@@ -55,8 +55,10 @@ public class Reader {
         while ((line = in.readLine()) != null) {
             parser.parseLine(line);
         }
-        if (verbose())
+        if (verbose()) {
             System.err.printf("input line count: %d\n", parser.getLineCount());
+            System.err.printf("unlocated unique cells: %d\n", parser.unlocatedCells.size());
+        }
     }
 
     public static boolean verbose() {

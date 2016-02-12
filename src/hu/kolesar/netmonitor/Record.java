@@ -84,15 +84,17 @@ public class Record {
     }
 
     public Measurement build() {
-        Measurement m = new Measurement();
-        m.CC = getCC();
-        m.NC = getNC();
-        m.LAC = getLAC();
-        m.CID = getCID();
-        m.CH = getCH();
+        Cell c = new Cell();
+        c.CC = getCC();
+        c.NC = getNC();
+        c.LAC = getLAC();
+        c.CID = getCID();
+        c.CH = getCH();
+        c.BSIC = getBSIC();
+
+        Measurement m = new Measurement(c);
         m.signal = getSignal();
         m.TA = getTA();
-        m.BSIC = getBSIC();
         return m;
     }
 }

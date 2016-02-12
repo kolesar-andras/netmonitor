@@ -33,12 +33,12 @@ public class JsonWriter extends Writer {
         out.write("    {\n");
         writeTag("lat", m.location.latlon.lat(), 7);
         writeTag("lon", m.location.latlon.lon(), 7);
-        writeTag("mcc", m.CC);
-        writeTag("mnc", m.NC);
-        writeTag("lac", m.LAC);
-        writeTag("cellid", m.CID);
-        writeTag("ch", m.CH);
-        writeTag("bsic", m.BSIC);
+        writeTag("mcc", m.cell.CC);
+        writeTag("mnc", m.cell.NC);
+        writeTag("lac", m.cell.LAC);
+        writeTag("cellid", m.cell.CID);
+        writeTag("ch", m.cell.CH);
+        writeTag("bsic", m.cell.BSIC);
         writeTag("signal", m.signal);
         writeTag("measured_at", m.date);
         writeTag("speed", m.location.speed, 1);

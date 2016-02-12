@@ -23,12 +23,12 @@ public class OsmWriter extends Writer {
         if (m.location == null) return;
         out.write(String.format(Locale.US, "<node id='90000%08d' visible='true' version='1' lat='%1.7f' lon='%1.7f'>\n",
             ++nodeId, m.location.latlon.lat(), m.location.latlon.lon()));
-        writeTag("mcc", m.CC);
-        writeTag("mnc", m.NC);
-        writeTag("lac", m.LAC);
-        writeTag("cellid", m.CID);
-        writeTag("ch", m.CH);
-        writeTag("bsic", m.BSIC);
+        writeTag("mcc", m.cell.CC);
+        writeTag("mnc", m.cell.NC);
+        writeTag("lac", m.cell.LAC);
+        writeTag("cellid", m.cell.CID);
+        writeTag("ch", m.cell.CH);
+        writeTag("bsic", m.cell.BSIC);
         writeTag("rssi", m.signal);
         writeTag("measured", m.date);
         writeTag("net", "gsm");

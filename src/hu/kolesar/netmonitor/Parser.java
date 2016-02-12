@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
 
 import org.openstreetmap.josm.data.gpx.GpxData;
@@ -32,6 +33,7 @@ public class Parser {
     private Writer writer;
     private Filter filter;
     private Georeferencer georeferencer;
+    public final HashSet<Cell> unlocatedCells = new HashSet<>();
 
     public Parser(GpxData gpxData, Writer writer) {
         this.writer = writer;
@@ -96,6 +98,7 @@ public class Parser {
             Measurement measurement = record.build();
             measurement.date = getRealTime(systemTime);
             measurement.location = georeferencer.getLocation(measurement.date);
+            if (measurement.location == null) unlocatedCells.add(measurement.cell);
             if (measurement.signal != null && filter.pass(measurement)) {
                 writer.write(measurement);
             }
