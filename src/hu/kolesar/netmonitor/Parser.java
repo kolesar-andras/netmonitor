@@ -93,7 +93,7 @@ public class Parser {
         return false;
     }
 
-    private boolean parseFinished() throws IOException {
+    private boolean parseFinished() throws IOException, NumberFormatException {
         if (line.equals("Information: Batch processed, terminating.")) {
             Measurement measurement = record.build();
             measurement.date = getRealTime(systemTime);

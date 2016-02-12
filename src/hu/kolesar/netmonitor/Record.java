@@ -1,9 +1,12 @@
 package hu.kolesar.netmonitor;
 
+import java.lang.StringBuilder;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.Map.Entry;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.text.ParseException;
 
 public class Record {
 
@@ -18,6 +21,17 @@ public class Record {
 
     public Record() {
         pages = new HashMap<>();
+    }
+
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (Entry<Integer,ArrayList<String>> entry : pages.entrySet()) {
+            builder.append(String.format("#%d\n", entry.getKey()));
+            for (String row : entry.getValue()) {
+                builder.append(row + "\n");
+            }
+        }
+        return builder.toString();
     }
 
     public void addRow(Integer netmonitorPage, String line) {
@@ -84,17 +98,25 @@ public class Record {
     }
 
     public Measurement build() {
-        Cell c = new Cell();
-        c.CC = getCC();
-        c.NC = getNC();
-        c.LAC = getLAC();
-        c.CID = getCID();
-        c.CH = getCH();
-        c.BSIC = getBSIC();
+        try {
+            Cell c = new Cell();
+            c.CC = getCC();
+            c.NC = getNC();
+            c.LAC = getLAC();
+            c.CID = getCID();
+            c.CH = getCH();
+            c.BSIC = getBSIC();
 
-        Measurement m = new Measurement(c);
-        m.signal = getSignal();
-        m.TA = getTA();
-        return m;
+            Measurement m = new Measurement(c);
+            m.signal = getSignal();
+            m.TA = getTA();
+            return m;
+
+        } catch (NumberFormatException e) {
+            StringBuilder builder = new StringBuilder();
+            builder.append("Parse error: " + e.getMessage() + "\n");
+            builder.append(this.toString());
+            throw new NumberFormatException(builder.toString());
+        }
     }
 }
