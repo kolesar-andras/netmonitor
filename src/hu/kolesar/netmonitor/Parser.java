@@ -25,6 +25,8 @@ public class Parser {
 
     private String line;
     private int lineCount = 0;
+    private int parseCount = 0;
+    private int locateCount = 0;
     private Date systemTime;
     private Date phoneTime;
     private long timeOffset;
@@ -104,11 +106,13 @@ public class Parser {
             measurement.date = getRealTime(systemTime);
             measurement.location = georeferencer.getLocation(measurement.date);
             measurementInterval.add(measurement.date);
+            parseCount++;
 
             if (measurement.location == null) {
                 unlocatedCells.add(measurement.cell);
             } else {
                 locatedInterval.add(measurement.date);
+                locateCount++;
             }
             if (measurement.signal != null && filter.pass(measurement)) {
                 writer.write(measurement);
@@ -137,6 +141,9 @@ public class Parser {
 
     public void printStats() {
         System.err.printf("input line count: %d\n", getLineCount());
+        System.err.printf("parsed:  %d\n", parseCount);
+        System.err.printf("located: %d\n", locateCount);
+        System.err.printf("written: %d\n", writer.writeCount);
         System.err.printf("unlocated unique cells: %d\n", unlocatedCells.size());
         System.err.printf("measurements: %s\n", measurementInterval);
         System.err.printf("trackpoints:  %s\n", georeferencer.waypointInterval);

@@ -35,6 +35,7 @@ public class OsmWriter extends Writer {
         writeTag("speed", m.location.speed, 0);
         writeTag("direction", m.location.direction, 0);
         out.write("</node>\n");
+        writeCount++;
     }
 
     public void end() throws IOException {

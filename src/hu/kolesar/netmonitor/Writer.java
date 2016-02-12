@@ -8,7 +8,8 @@ public abstract class Writer {
 
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    BufferedWriter out;
+    protected BufferedWriter out;
+    public int writeCount = 0;
 
     public Writer(BufferedWriter out) {
         this.out = out;

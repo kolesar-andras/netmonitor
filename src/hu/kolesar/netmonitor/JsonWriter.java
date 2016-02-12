@@ -44,6 +44,7 @@ public class JsonWriter extends Writer {
         writeTag("speed", m.location.speed, 1);
         writeTag("direction", m.location.direction, 1);
         out.write("\n    }");
+        writeCount++;
     }
 
     public void end() throws IOException {
