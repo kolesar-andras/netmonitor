@@ -55,6 +55,7 @@ public class Reader {
         while ((line = in.readLine()) != null) {
             parser.parseLine(line);
         }
+        parser.flush();
         if (verbose()) parser.printStats();
     }
 

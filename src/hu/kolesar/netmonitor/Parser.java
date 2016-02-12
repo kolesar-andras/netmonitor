@@ -8,7 +8,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Locale;
 
 import org.openstreetmap.josm.data.gpx.GpxData;
@@ -25,8 +24,6 @@ public class Parser {
 
     private String line;
     private int lineCount = 0;
-    private int parseCount = 0;
-    private int locateCount = 0;
     private Date systemTime;
     private Date phoneTime;
     private long timeOffset;
@@ -35,15 +32,11 @@ public class Parser {
     private Writer writer;
     private Filter filter;
     private Georeferencer georeferencer;
-    private final HashSet<Cell> unlocatedCells = new HashSet<>();
-
-    private DateInterval measurementInterval = new DateInterval();
-    private DateInterval locatedInterval = new DateInterval();
 
     public Parser(GpxData gpxData, Writer writer) {
         this.writer = writer;
         record = new Record();
-        filter = new Filter();
+        filter = new Filter(writer);
         georeferencer = new Georeferencer(gpxData);
     }
 
@@ -105,18 +98,8 @@ public class Parser {
             Measurement measurement = record.build();
             measurement.date = getRealTime(systemTime);
             measurement.location = georeferencer.getLocation(measurement.date);
-            measurementInterval.add(measurement.date);
-            parseCount++;
+            filter.write(measurement);
 
-            if (measurement.location == null) {
-                unlocatedCells.add(measurement.cell);
-            } else {
-                locatedInterval.add(measurement.date);
-                locateCount++;
-            }
-            if (measurement.signal != null && filter.pass(measurement)) {
-                writer.write(measurement);
-            }
             record = new Record();
             return true;
         }
@@ -141,12 +124,17 @@ public class Parser {
 
     public void printStats() {
         System.err.printf("input line count: %d\n", getLineCount());
-        System.err.printf("parsed:  %d\n", parseCount);
-        System.err.printf("located: %d\n", locateCount);
+        System.err.printf("parsed:  %d\n", filter.parseCount);
+        System.err.printf("located: %d\n", filter.locateCount);
         System.err.printf("written: %d\n", writer.writeCount);
-        System.err.printf("unlocated unique cells: %d\n", unlocatedCells.size());
-        System.err.printf("measurements: %s\n", measurementInterval);
+        System.err.printf("unlocated unique cells: %d\n", filter.unlocatedCells.size());
+        // for (Cell cell : filter.unlocatedCells) System.err.println(cell);
+        System.err.printf("measurements: %s\n", filter.measurementInterval);
         System.err.printf("trackpoints:  %s\n", georeferencer.waypointInterval);
-        System.err.printf("located:      %s\n", locatedInterval);
+        System.err.printf("located:      %s\n", filter.locatedInterval);
+    }
+
+    public void flush() throws IOException {
+        filter.flush();
     }
 }
