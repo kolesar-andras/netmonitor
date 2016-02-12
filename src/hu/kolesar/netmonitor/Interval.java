@@ -3,7 +3,7 @@ package hu.kolesar.netmonitor;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
-class Interval<T extends Comparable> {
+class Interval<T extends Comparable<? super T>> {
     public T min;
     public T max;
 

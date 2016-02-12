@@ -33,10 +33,10 @@ public class Parser {
     private Writer writer;
     private Filter filter;
     private Georeferencer georeferencer;
-    public final HashSet<Cell> unlocatedCells = new HashSet<>();
+    private final HashSet<Cell> unlocatedCells = new HashSet<>();
 
-    public DateInterval measurementInterval = new DateInterval();
-    public DateInterval locatedInterval = new DateInterval();
+    private DateInterval measurementInterval = new DateInterval();
+    private DateInterval locatedInterval = new DateInterval();
 
     public Parser(GpxData gpxData, Writer writer) {
         this.writer = writer;
@@ -133,5 +133,13 @@ public class Parser {
 
     private Date getRealTime(Date systemTime) {
         return new Date(systemTime.getTime() + timeOffset);
+    }
+
+    public void printStats() {
+        System.err.printf("input line count: %d\n", getLineCount());
+        System.err.printf("unlocated unique cells: %d\n", unlocatedCells.size());
+        System.err.printf("measurements: %s\n", measurementInterval);
+        System.err.printf("trackpoints:  %s\n", georeferencer.waypointInterval);
+        System.err.printf("located:      %s\n", locatedInterval);
     }
 }

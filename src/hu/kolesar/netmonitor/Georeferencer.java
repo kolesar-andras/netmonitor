@@ -21,6 +21,8 @@ public class Georeferencer {
     private WayPoint lastWayPoint = null;
     private boolean noMoreWayPoint = false;
 
+    public DateInterval waypointInterval = new DateInterval();
+
     public Georeferencer(GpxData gpxData) {
         this.gpxData = gpxData;
     }
@@ -75,7 +77,9 @@ public class Georeferencer {
             if (gpxTrackSegment == null) return null;
             itWayPoint = gpxTrackSegment.getWayPoints().iterator();
         }
-        return itWayPoint.next();
+        WayPoint waypoint = itWayPoint.next();
+        waypointInterval.add(waypoint.getTime());
+        return waypoint;
     }
 
     class OutOfTrackException extends Exception {}
