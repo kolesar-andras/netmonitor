@@ -113,6 +113,8 @@ public class Parser {
     private void setTimeOffset() {
         if (systemTime == null) return;
         timeOffset = phoneTime.getTime() - systemTime.getTime();
+        if (Reader.verbose())
+            System.err.printf("time offset: %d s\n", timeOffset/1000);
     }
 
     private Date getRealTime(Date systemTime) {
