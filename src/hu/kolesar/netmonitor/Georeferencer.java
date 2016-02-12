@@ -82,5 +82,9 @@ public class Georeferencer {
         return waypoint;
     }
 
+    public void flush() {
+        while (null != nextWayPoint());
+    }
+
     class OutOfTrackException extends Exception {}
 }

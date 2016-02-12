@@ -136,5 +136,6 @@ public class Parser {
 
     public void flush() throws IOException {
         filter.flush();
+        georeferencer.flush();
     }
 }
