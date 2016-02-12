@@ -35,6 +35,9 @@ public class Parser {
     private Georeferencer georeferencer;
     public final HashSet<Cell> unlocatedCells = new HashSet<>();
 
+    public DateInterval measurementInterval = new DateInterval();
+    public DateInterval locatedInterval = new DateInterval();
+
     public Parser(GpxData gpxData, Writer writer) {
         this.writer = writer;
         record = new Record();
@@ -100,7 +103,13 @@ public class Parser {
             Measurement measurement = record.build();
             measurement.date = getRealTime(systemTime);
             measurement.location = georeferencer.getLocation(measurement.date);
-            if (measurement.location == null) unlocatedCells.add(measurement.cell);
+            measurementInterval.add(measurement.date);
+
+            if (measurement.location == null) {
+                unlocatedCells.add(measurement.cell);
+            } else {
+                locatedInterval.add(measurement.date);
+            }
             if (measurement.signal != null && filter.pass(measurement)) {
                 writer.write(measurement);
             }

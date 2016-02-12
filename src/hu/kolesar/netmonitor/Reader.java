@@ -58,6 +58,8 @@ public class Reader {
         if (verbose()) {
             System.err.printf("input line count: %d\n", parser.getLineCount());
             System.err.printf("unlocated unique cells: %d\n", parser.unlocatedCells.size());
+            System.err.printf("measurements: %s\n", parser.measurementInterval);
+            System.err.printf("located  \"  : %s\n", parser.locatedInterval);
         }
     }
 
