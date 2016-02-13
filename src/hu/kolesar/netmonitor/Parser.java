@@ -26,7 +26,8 @@ public class Parser {
     private int lineCount = 0;
     private Date systemTime;
     private Date phoneTime;
-    private long timeOffset;
+    private long phoneTimeOffset = 0; // phone time - real time
+    private long systemTimeOffset; // system time - real time
     private Integer netmonitorPage;
     private Record record;
     private Writer writer;
@@ -38,6 +39,11 @@ public class Parser {
         record = new Record();
         filter = new Filter(writer);
         georeferencer = new Georeferencer(gpxData);
+        if (Cli.instance.cmd.hasOption("offset")) {
+            phoneTimeOffset = Integer.parseInt(Cli.instance.cmd.getOptionValue("offset")) * 1000;
+            if (Reader.verbose())
+                System.err.printf("phone time offset: %d s\n", phoneTimeOffset/1000);
+        }
     }
 
     public boolean parseLine(String line) throws IOException, ParseException {
@@ -113,13 +119,13 @@ public class Parser {
 
     private void setTimeOffset() {
         if (systemTime == null) return;
-        timeOffset = phoneTime.getTime() - systemTime.getTime();
+        systemTimeOffset = systemTime.getTime() - (phoneTime.getTime() - phoneTimeOffset);
         if (Reader.verbose())
-            System.err.printf("time offset: %d s\n", timeOffset/1000);
+            System.err.printf("system time offset: %d s\n", systemTimeOffset/1000);
     }
 
     private Date getRealTime(Date systemTime) {
-        return new Date(systemTime.getTime() + timeOffset);
+        return new Date(systemTime.getTime() - systemTimeOffset);
     }
 
     public void printStats() {

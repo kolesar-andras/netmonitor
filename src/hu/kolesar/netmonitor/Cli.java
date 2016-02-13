@@ -21,8 +21,16 @@ public class Cli {
 
         options.addOption(Option.builder("f")
             .longOpt("format")
-            .argName("format")
+            .argName("file format")
             .desc("output file format [json|osm]")
+            .hasArg()
+            .build()
+        );
+
+        options.addOption(Option.builder("o")
+            .longOpt("offset")
+            .argName("seconds")
+            .desc("offset = phone time - time used in trackfile (in local timezone)")
             .hasArg()
             .build()
         );
