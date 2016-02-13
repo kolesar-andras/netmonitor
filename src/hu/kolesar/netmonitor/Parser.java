@@ -120,6 +120,10 @@ public class Parser {
     private void setTimeOffset() {
         if (systemTime == null) return;
         systemTimeOffset = systemTime.getTime() - (phoneTime.getTime() - phoneTimeOffset);
+        if (Cli.instance.cmd.hasOption("print-system-offset")) {
+            System.err.printf("%d\n", systemTimeOffset/1000);
+            System.exit(0);
+        }
         if (Reader.verbose())
             System.err.printf("system time offset: %d s\n", systemTimeOffset/1000);
     }

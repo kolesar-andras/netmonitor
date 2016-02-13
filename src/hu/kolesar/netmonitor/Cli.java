@@ -35,10 +35,17 @@ public class Cli {
             .build()
         );
 
+        options.addOption(Option.builder()
+            .longOpt("print-system-offset")
+            .desc("print system offset and exit")
+            .build()
+        );
+
         CommandLineParser parser = new BasicParser();
         cmd = parser.parse(options, args);
 
-        if (cmd.getArgs().length == 0 || cmd.hasOption("help")) {
+        if (!cmd.hasOption("print-system-offset") &&
+            (cmd.getArgs().length == 0 || cmd.hasOption("help"))) {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("[options] <trackfile>", options);
             System.exit(1);

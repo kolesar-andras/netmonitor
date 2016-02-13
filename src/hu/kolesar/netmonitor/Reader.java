@@ -32,7 +32,8 @@ public class Reader {
         }
         writer.start();
 
-        loadTrack(cli.cmd.getArgs()[0]);
+        if (!Cli.instance.cmd.hasOption("print-system-offset"))
+            loadTrack(cli.cmd.getArgs()[0]);
         loadInput(in);
 
         in.close();
