@@ -1,5 +1,6 @@
 package hu.kolesar.netmonitor;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -46,7 +47,21 @@ public class Parser {
         }
     }
 
-    public boolean parseLine(String line) throws IOException, ParseException {
+    public void parse(BufferedReader in) throws IOException, ParseException {
+        try {
+            String line;
+            while ((line = in.readLine()) != null) {
+                parseLine(line);
+            }
+            if (Cli.instance.cmd.hasOption("print-system-offset")) {
+                System.err.println("ERROR: phone time not available");
+                throw new ExitException();
+            }
+            flush();
+        } catch (ExitException e) {}
+    }
+
+    public boolean parseLine(String line) throws IOException, ParseException, ExitException {
         this.line = line;
         lineCount++;
         return
@@ -78,7 +93,7 @@ public class Parser {
         return false;
     }
 
-    private boolean parsePhoneTime() throws ParseException {
+    private boolean parsePhoneTime() throws ParseException, ExitException {
         Matcher matcher = patternPhoneTime.matcher(line.trim());
         if (matcher.matches()) {
             if (phoneTime == null) {
@@ -117,12 +132,12 @@ public class Parser {
         return true;
     }
 
-    private void setTimeOffset() {
+    private void setTimeOffset() throws ExitException {
         if (systemTime == null) return;
         systemTimeOffset = systemTime.getTime() - (phoneTime.getTime() - phoneTimeOffset);
         if (Cli.instance.cmd.hasOption("print-system-offset")) {
-            System.err.printf("%d\n", systemTimeOffset/1000);
-            System.exit(0);
+            System.err.printf("%s %d\n", formatSystemTime.format(getRealTime(systemTime)), systemTimeOffset/1000);
+            throw new ExitException();
         }
         if (Reader.verbose())
             System.err.printf("system time offset: %d s\n", systemTimeOffset/1000);
@@ -148,4 +163,6 @@ public class Parser {
         filter.flush();
         georeferencer.flush();
     }
+
+    class ExitException extends Exception {};
 }

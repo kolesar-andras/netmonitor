@@ -57,7 +57,10 @@ public class Georeferencer {
     }
 
     public GpxTrack nextGpxTrack() {
-        if (itGpxTrack == null) itGpxTrack = gpxData.tracks.iterator();
+        if (itGpxTrack == null) {
+            if (gpxData == null || gpxData.tracks == null) return null;
+            itGpxTrack = gpxData.tracks.iterator();
+        }
         if (!itGpxTrack.hasNext()) return null;
         return itGpxTrack.next();
     }

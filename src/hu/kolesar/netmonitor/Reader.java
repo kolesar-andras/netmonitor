@@ -21,9 +21,15 @@ public class Reader {
 
     public static void main(String[] args) throws IOException, ParseException, SAXException, org.apache.commons.cli.ParseException {
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(System.out));
         Cli cli = new Cli(args);
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter out;
+        if (!Cli.instance.cmd.hasOption("print-system-offset")) {
+            out = new BufferedWriter(new OutputStreamWriter(System.out));
+        } else {
+            out = new NullWriter(new OutputStreamWriter(System.out));
+        }
 
         if (cli.cmd.hasOption("format") && cli.cmd.getOptionValue("format").equals("osm")) {
             writer = new OsmWriter(out);
@@ -32,8 +38,10 @@ public class Reader {
         }
         writer.start();
 
-        if (!Cli.instance.cmd.hasOption("print-system-offset"))
+        if (!Cli.instance.cmd.hasOption("print-system-offset")) {
             loadTrack(cli.cmd.getArgs()[0]);
+        }
+
         loadInput(in);
 
         in.close();
@@ -52,15 +60,19 @@ public class Reader {
 
     private static void loadInput(BufferedReader in) throws IOException, ParseException {
         Parser parser = new Parser(gpxData, writer);
-        String line;
-        while ((line = in.readLine()) != null) {
-            parser.parseLine(line);
-        }
-        parser.flush();
+        parser.parse(in);
         if (verbose()) parser.printStats();
     }
 
     public static boolean verbose() {
         return Cli.instance.cmd.hasOption("verbose");
+    }
+
+    static class NullWriter extends BufferedWriter {
+        public NullWriter(java.io.Writer out) {
+            super(out);
+        }
+        @Override
+        public void write(String output) throws IOException {}
     }
 }
