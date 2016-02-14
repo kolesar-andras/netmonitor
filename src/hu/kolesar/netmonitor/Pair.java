@@ -36,7 +36,7 @@ public class Pair {
     }
 
     public double getHeading() {
-        return before.getCoor().heading(after.getCoor()); // radians
+        return before.getCoor().bearing(after.getCoor()); // radians
     }
 
     public float getSpeed() {
